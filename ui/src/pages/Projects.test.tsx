@@ -8,6 +8,7 @@ import type { Project } from "@paperclipai/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ToastProvider } from "../context/ToastContext";
 import { Projects } from "./Projects";
+import { changeLocale } from "@/i18n";
 
 const mockProjectsApi = vi.hoisted(() => ({
   list: vi.fn(),
@@ -114,7 +115,8 @@ describe("Projects", () => {
   let root: ReturnType<typeof createRoot> | null;
   let queryClient: QueryClient;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await changeLocale("en");
     container = document.createElement("div");
     document.body.appendChild(container);
     root = null;

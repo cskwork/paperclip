@@ -4,6 +4,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ThemeToggle } from "./ThemeToggle";
+import { changeLocale } from "@/i18n";
 
 const mockToggleTheme = vi.hoisted(() => vi.fn());
 const mockTheme = vi.hoisted(() => ({ value: "dark" as "dark" | "light" }));
@@ -27,7 +28,8 @@ async function flushReact() {
 describe("ThemeToggle", () => {
   let container: HTMLDivElement;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await changeLocale("en");
     container = document.createElement("div");
     document.body.appendChild(container);
     mockTheme.value = "dark";

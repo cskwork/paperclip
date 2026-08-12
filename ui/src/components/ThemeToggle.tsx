@@ -3,6 +3,7 @@ import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTheme } from "../context/ThemeContext";
+import { useTranslation } from "@/i18n";
 
 type ThemeToggleVariant = "icon" | "menu-action";
 
@@ -24,7 +25,6 @@ interface ThemeToggleProps {
   onAfterToggle?: () => void;
 }
 
-const MENU_ACTION_DESCRIPTION = "Toggle the app appearance.";
 
 /**
  * Canonical theme-toggle widget. Both the signed-out `/auth` chrome and
@@ -33,8 +33,9 @@ const MENU_ACTION_DESCRIPTION = "Toggle the app appearance.";
  */
 export function ThemeToggle({ className, variant = "icon", onAfterToggle }: ThemeToggleProps) {
   const { theme, toggleTheme } = useTheme();
+  const { t } = useTranslation();
   const isDark = theme === "dark";
-  const label = isDark ? "Switch to light mode" : "Switch to dark mode";
+  const label = t(isDark ? "theme.switchLight" : "theme.switchDark");
   const Icon = isDark ? Sun : Moon;
 
   function handleClick() {
@@ -58,7 +59,7 @@ export function ThemeToggle({ className, variant = "icon", onAfterToggle }: Them
         </span>
         <span className="min-w-0 flex-1">
           <span className="block text-sm font-medium text-foreground">{label}</span>
-          <span className="block text-xs text-muted-foreground">{MENU_ACTION_DESCRIPTION}</span>
+          <span className="block text-xs text-muted-foreground">{t("theme.description")}</span>
         </span>
       </button>
     );

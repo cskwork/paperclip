@@ -1,18 +1,30 @@
 import { describe, expect, it } from "vitest";
-import { t } from ".";
+import { changeLocale, i18n, resolveLocale, t } from ".";
 import en from "./locales/en.json";
-import { localeMessages } from "./locales";
+import ko from "./locales/ko.json";
+import { DEFAULT_LOCALE, FALLBACK_LOCALE, localeMessages, supportedLocales } from "./locales";
 import { validateLocaleMessages } from "./locale-validation";
 
 describe("locale validation", () => {
-  it("resolves English messages with key and default fallbacks", () => {
+  it("defaults to Korean, switches languages, and falls back to English", async () => {
+    expect(DEFAULT_LOCALE).toBe("ko");
+    expect(FALLBACK_LOCALE).toBe("en");
+    expect(resolveLocale("unsupported")).toBe("ko");
+
+    await changeLocale("ko");
+    expect(t("app.noCompanies.title")).toBe(ko.app.noCompanies.title);
+
+    await changeLocale("en");
     expect(t("app.noCompanies.title")).toBe(en.app.noCompanies.title);
+    expect(i18n.t("dashboard.getStarted", { lng: "unsupported" })).toBe(en.dashboard.getStarted);
     expect(t("app.missing", { defaultValue: "Fallback" })).toBe("Fallback");
     expect(t("app.missing")).toBe("app.missing");
+
+    await changeLocale("ko");
   });
 
   it("accepts registered locale files", () => {
-    expect(Object.keys(localeMessages)).toContain("en");
+    expect(supportedLocales).toEqual(["ko", "en"]);
     for (const [locale, messages] of Object.entries(localeMessages)) {
       expect(validateLocaleMessages(messages), locale).toEqual([]);
     }
